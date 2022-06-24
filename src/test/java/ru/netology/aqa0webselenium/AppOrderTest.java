@@ -39,7 +39,7 @@ public class AppOrderTest {
 
     @Test
     public void shouldBeSuccessfulForm() {
-        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Иваныч");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иваныч-Ивановичев Иван");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
@@ -68,7 +68,7 @@ public class AppOrderTest {
 
     @Test
     public void shouldBeFailedIncorrectPhoneInput() {
-        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иваныч-Ивановичев Иван");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("Gleb");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
@@ -78,7 +78,7 @@ public class AppOrderTest {
 
     @Test
     public void shouldBeFailedEmptyPhoneInput() {
-        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иваныч-Ивановичев Иван");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
         assertEquals("Поле обязательно для заполнения",
@@ -87,7 +87,7 @@ public class AppOrderTest {
 
     @Test
     public void shouldBeFailedUncheckedCheckbox() {
-        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иваныч-Ивановичев Иван");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
         driver.findElement(By.cssSelector("[type=button]")).click();
         assertTrue(driver.findElement(By.cssSelector("[data-test-id=agreement].input_invalid")).isDisplayed());
