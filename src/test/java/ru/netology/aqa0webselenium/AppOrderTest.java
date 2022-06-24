@@ -28,6 +28,7 @@ public class AppOrderTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
     }
 
     @AfterEach
@@ -37,35 +38,55 @@ public class AppOrderTest {
     }
 
     @Test
-    public void shouldTestV1() {
-        driver.get("http://localhost:9999");
+    public void shouldBeSuccessfulForm() {
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Иван Иваныч");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
         driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
-        assertTrue(driver.findElement(By.cssSelector("[data-test-id=order-success]")).isDisplayed());
+        assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.",
+                driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText().trim());
     }
 
     @Test
-    public void shouldTestV2() {
-        driver.get("http://localhost:9999");
+    public void shouldBeFailedIncorrectNameInput() {
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Gleb");
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
-        assertTrue(driver.findElement(By.cssSelector("[data-test-id=name].input_invalid")).isDisplayed());
+        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.",
+                driver.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText().trim());
     }
 
     @Test
-    public void shouldTestV3() {
-        driver.get("http://localhost:9999");
+    public void shouldBeFailedEmptyNameInput() {
+        driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("[type=button]")).click();
+        assertEquals("Поле обязательно для заполнения",
+                driver.findElement(By.cssSelector("[data-test-id=name].input_invalid .input__sub")).getText().trim());
+    }
+
+    @Test
+    public void shouldBeFailedIncorrectPhoneInput() {
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("Gleb");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
         driver.findElement(By.cssSelector("[type=button]")).click();
-        assertTrue(driver.findElement(By.cssSelector("[data-test-id=phone].input_invalid")).isDisplayed());
+        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.",
+                driver.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText().trim());
     }
 
     @Test
-    public void shouldTestV4() {
-        driver.get("http://localhost:9999");
+    public void shouldBeFailedEmptyPhoneInput() {
+        driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
+        driver.findElement(By.cssSelector("[data-test-id=agreement]")).click();
+        driver.findElement(By.cssSelector("[type=button]")).click();
+        assertEquals("Поле обязательно для заполнения",
+                driver.findElement(By.cssSelector("[data-test-id=phone].input_invalid .input__sub")).getText().trim());
+    }
+
+    @Test
+    public void shouldBeFailedUncheckedCheckbox() {
         driver.findElement(By.cssSelector("[data-test-id=name] input")).sendKeys("Глеб");
         driver.findElement(By.cssSelector("[data-test-id=phone] input")).sendKeys("+78005553535");
         driver.findElement(By.cssSelector("[type=button]")).click();
